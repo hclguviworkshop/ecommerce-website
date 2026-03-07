@@ -4,11 +4,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASS,
+    'ecommerce',
+    'postgres',
+    'SXjzhFRpsTLteqloTfNCyaMzAPBmODru',
     {
-        host: process.env.DB_HOST,
+        host: 'switchyard.proxy.rlwy.net',
         dialect: 'postgres',
         logging: false, // Set to console.log to see SQL queries
     }
