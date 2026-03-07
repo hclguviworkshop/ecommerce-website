@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const path = require('path');
+const rateLimit = require('express-rate-limit');
 const { sequelize } = require('./models');
 const routes = require('./routes');
 
@@ -16,8 +18,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
+// General rate limiter applied to all routes
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Routes
 app.use('/api', routes);
+
+// Serve React frontend static build
+const STATIC_DIR = path.join(__dirname, 'public');
+app.use(express.static(STATIC_DIR));
+
+// Catch-all: serve index.html for client-side routing (SPA)
+// Only handles non-API GET requests so API 404s are not swallowed.
+app.get('*', limiter, (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ success: false, message: 'Not Found' });
+  }
+  res.sendFile(path.join(STATIC_DIR, 'index.html'), (err) => {
+    if (err) {
+      res.status(404).send('Frontend not found');
+    }
+  });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
