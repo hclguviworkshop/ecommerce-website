@@ -1,0 +1,101 @@
+name: Build UI and Backend
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-frontend:
+    name: Build React UI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ecommerce_export/frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ecommerce_export/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4.1.8
+        with:
+          name: frontend-dist
+          path: ecommerce_export/frontend/dist
+
+  build-backend:
+    name: Build Express Backend
+    runs-on: ubuntu-latest
+    needs: build-frontend
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ecommerce_export/backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ecommerce_export/backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download frontend build artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: frontend-dist
+          path: ecommerce_export/backend/public
+
+  docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: build-frontend
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ecommerce_export
+          file: ecommerce_export/Dockerfile
+          push: false
+          tags: ecommerce-website:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
