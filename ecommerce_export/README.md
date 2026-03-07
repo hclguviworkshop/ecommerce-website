@@ -1,6 +1,6 @@
 # Full-Stack E-Commerce Application
 
-This is a complete, modern e-commerce application built with React, Node.js, Express, and MySQL.
+This is a complete, modern e-commerce application built with React, Node.js, Express, and PostgreSQL.
 
 ## Project Structure
 
@@ -21,7 +21,7 @@ The project is divided into two main folders:
 
 ### Prerequisites
 - Node.js (v18+)
-- MySQL Server
+- PostgreSQL Server
 
 ### Backend Setup
 1. Navigate to the backend directory:
@@ -32,7 +32,7 @@ The project is divided into two main folders:
    ```bash
    npm install
    ```
-3. Create a MySQL database named `ecommerce_db` (or whatever you configure in `.env`).
+3. Create a PostgreSQL database named `ecommerce_db` (or whatever you configure in `.env`).
 4. Review the `.env` file credentials.
 5. Run the development server:
    ```bash
