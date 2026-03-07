@@ -2,7 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/hclguviworkshop/simiecom-$COMMIT_SHA', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/hclguviworkshop/simiecom-bff-$COMMIT_SHA']
+    args: ['push', 'asia-south1-docker.pkg.dev/${PROJECT_ID}/hclguviworkshop/simiecom-$COMMIT_SHA']
 logsBucket: 'gs://buildlogs-ana'
 serviceAccount: 'kumaran-anatechin-com@ana-tech-prod.iam.gserviceaccount.com'
 options:
