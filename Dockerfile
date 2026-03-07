@@ -4,11 +4,11 @@ FROM node:20-alpine AS build-frontend
 WORKDIR /app/frontend
 
 # Install dependencies
-COPY frontend/package*.json ./
+COPY ecommerce_export/frontend/package*.json ./
 RUN npm ci
 
 # Copy source and build
-COPY frontend/ ./
+COPY ecommerce_export/frontend/ ./
 RUN npm run build
 
 
@@ -18,12 +18,11 @@ FROM node:20-alpine AS production
 WORKDIR /app/backend
 
 # Install backend dependencies
-COPY backend/package*.json ./
+COPY ecommerce_export/backend/package*.json ./
 RUN npm ci --omit=dev
 
 # Copy backend source
-COPY backend/ ./
-
+COPY ecommerce_export/backend/ ./           
 # Copy the built React app into the backend's public directory
 # Express will serve these static files
 COPY --from=build-frontend /app/frontend/dist ./public
