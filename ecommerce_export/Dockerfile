@@ -29,10 +29,9 @@ COPY backend/ ./
 COPY --from=build-frontend /app/frontend/dist ./public
 
 # Expose the port Express listens on (default 5000)
-EXPOSE 5000
+EXPOSE 3001
 
 # Environment defaults (override at runtime)
 ENV NODE_ENV=production \
-    PORT=5000
-
+    PORT=3001
 CMD ["node", "server.js"]
