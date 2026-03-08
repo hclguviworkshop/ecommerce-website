@@ -9,9 +9,11 @@ const sequelize = new Sequelize(
     'SXjzhFRpsTLteqloTfNCyaMzAPBmODru',
     {
         host: 'switchyard.proxy.rlwy.net',
+        port: 30199,
         dialect: 'postgres',
         logging: false, // Set to console.log to see SQL queries
     }
 );
 
 module.exports = sequelize;
+
