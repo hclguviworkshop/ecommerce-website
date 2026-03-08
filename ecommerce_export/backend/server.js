@@ -35,7 +35,7 @@ app.use(express.static(STATIC_DIR));
 
 // Catch-all: serve index.html for client-side routing (SPA)
 // Only handles non-API GET requests so API 404s are not swallowed.
-app.get('*', limiter, (req, res) => {
+app.get('/{*path}', limiter, (req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ success: false, message: 'Not Found' });
   }
